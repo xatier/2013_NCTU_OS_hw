@@ -68,4 +68,28 @@ If you are already familiar with this, you can skip this part.
 [gedit](https://projects.gnome.org/gedit/), [bluefish](http://bluefish.openoffice.nl/index.html), [code::blocks](http://www.codeblocks.org/) and [sublime](http://www.sublimetext.com/).
 
 3.  Makefile  
->   Makefile can help you  
+>   Makefile can help you build the src code and save time.  
+
+### Fork
+
+fork() duplicates the calling process.
+The origin process is called as 'parent', duplicate is called as 'child'.
+
+fork() returns pid of child process in parent and return 0 in child. If fork() is failed, -1 is returned.
+
+If you want to know more detail of fork, type `man fork` in terminal.
+
+#### * Fork example 1
+
+>	This example show the basic use of fork.
+>	In the example, fork is called and create the child process.
+
+>	Usually, we use if statement to decide doing of each process.
+
+>	You can see two of them use same variable "str" as print string buffer; However, they print out different content.
+
+>	That is because when fork is called, child process is assigned its own memory space. Thus, they would not change any variable which belongs to each other.
+
+#### * Fork example 2
+
+We extend the example 1 to show how waitpid works. waitpid is a function to let parent process wait for anothoer process end.
