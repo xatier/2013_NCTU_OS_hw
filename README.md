@@ -79,12 +79,18 @@ The origin process is called as 'parent', duplicate is called as 'child'.
 If you want to know more details of fork, type `man fork` in terminal.
 
 #### * Example 1-1 fork
+```C
+  #include <unistd.h>
+  
+  pid_t fork(void);
+```
 
 >   This example show the basic use of fork.
 >   In the example, fork is called and create the child process.  
 >   Usually, we use if statement to decide actions of each process.
 
 ```C 
+  cpid = fork();
   if (cpid < 0) { /* failed */
   } else if (cpid == 0) { /* child process */
   } else { /* parent process */ }
@@ -94,6 +100,13 @@ If you want to know more details of fork, type `man fork` in terminal.
 >   That is because when fork is called, child process is assigned its own memory space. Thus, they would not change any variable which belongs to each other.
 
 #### * Example 1-2 fork with waitpid 
+
+```C
+  #include <sys/types.h>
+  #include <sys/wait.h>
+  
+  pid_t waitpid(pid_t pid, int *status, int options);
+```
 
 >   We extend the example 1-1 to show how waitpid works. 
 `waitpid()` is a function to let parent  process wait for any child process to end.
@@ -119,6 +132,12 @@ First, we will introducte the anonymous pipeline in example 2-1 to let you know 
 Then, in exmample 2-2 and 2-3, we will talk about named pipe(FIFO) and show you what's a difference between anonymous and named pipe.
 
 #### * Example 2-1 pipe
+```C
+  #include <unistd.h>
+  
+  int pipe(int pipefd[2]);
+```
+
 
 >   In this example, we call `pipe()` to create a pipeline for communicating between two processes. 
 When `pipe()` is called,  it will give out two file descriptors which are not point to a file but a memory space.
@@ -128,7 +147,7 @@ The first descriptor fd[0] is for popping things from memory, the second descrip
   pipe(fd);
   cpid = fork();
   if ( cpid < 0 ){ /*failed*/
-  } else if ( cpid == 0 ) { /* child process, sent message to parent */
+  } else if ( cpid == 0 ) { /* child process, send a message to parent */
     close(fd[0]); /* close a unused read pipe fd */
     write(fd[1], buf, sizeof(char) * (strlen(buf)+1) );
     close(fd[1]);
@@ -148,6 +167,52 @@ In contrast, if putting `pipe()` before `fork()`, the value of file descriptors 
 
 #### * Example 2-2 FIFO
 
+```C
+  #include <sys/types.h>
+  #include <sys/stat.h>
+  
+  int mkfifo(const char *pathname, mode_t mode);
+```
+
 >   Named pipeline (a.k.a. FIFO) is same as anonymous pipeline, but creating a special file. 
 This file let communication between two unrelated processes,  which have no parent-child relation, becomes possible. 
 But in this example, we show the basic use first.
+
+>  To use named pipeline, `mkfifo()` is called to create a named pipeline file. 
+And then you need open the file to use the pipeline **(use `open()`, not `fopen()`)**. 
+After those, you can use it just as a regular file.
+
+```C
+  mkfifo(path, 0666);
+  if ( cpid < 0 ) { /* failed */
+  } else if ( cpid == 0 ) { /* child process, send a message */
+    fd = open(path, O_WRONLY);
+    write(fd, str, sizeof(char)*(strlen(str)+1));
+    close(fd);
+  } else {
+    fd = open(path, O_RDONLY);
+    read(fd, str, sizeof(char)*BUFFER_SIZE);
+    close(fd);
+  }
+```
+
+#### * Example 2-3 link two unrelated processes by FIFO
+
+>  You can create a named pipeline file by your hand. 
+Type `mkfifo test` in terminal and you can see the file named "test". 
+
+    prw-rw-r--  1 root root 0M 10月  3 00:35 test
+    
+>  As above, the first flag of the file is 'p', which means pipeline file. 
+A pipeline file accesses to a memory space, instead of disk. 
+You can use it to create a communication between two running process. 
+
+>  Open a new terminal and type `ls > test` in it. you can see nothing printed. Don't worry, things are quite normal.  
+>  Open another terminal and type `cat < test`. Surprisingly, what should be printed on first terminal appear on the second terminal.  
+>  That is because the output of `ls` is buffered in memory which "test" accesses, and then `cat` take them from "test" as input to display. 
+
+>  The code "2-3" does similar things as above.
+
+>  If you want to know more details of mkfifo, type `man mkfifo` and `man 3 mkfifo` in terminal.
+
+### Shared memory
