@@ -35,7 +35,6 @@ int main (int argc, char* argv[]) {
 		printf("Parent got a message.\n");
 		printf("->%s\n", str);
 		close(fd);
-		waitpid(-1, 0, 0);
 		remove(path);
 	}
 

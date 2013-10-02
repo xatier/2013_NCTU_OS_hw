@@ -42,7 +42,6 @@ int main (int argc, char* argv[]) {
 		return 0;
 	} else { /* parent process, recv message from child */
 		close(fd[1]); /* close a unused write pipe fd */
-		waitpid(-1, 0, 0);
 		read(fd[0], buf, sizeof(char) * BUFFER_SIZE);
 		printf("Parent got a message.\n");
 		printf("-> %s\n", buf);
