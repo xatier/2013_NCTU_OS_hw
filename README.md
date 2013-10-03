@@ -122,7 +122,7 @@ In the program, parent calls the `waitpid()` to wait for child to end.
 ### Named pipe (a.k.a. FIFO)
 
 Pipeline is a useful mechanism in Unix/Linux based system. 
-It creates a buffer in memory to let a program push messages to this buffer and then any other program knowing the pipe descriptor can pop out messages from it.
+It creates a buffer in kernal to let a program push messages to this buffer and any program knowing the pipe descriptor can pop out messages from it.
 
 In [Part A - Step 2](https://github.com/RuKuWu/2013_NCTU_OS_hw#step-2), we use a command `ps aux | grep firefox`. It's a use of pipeline. 
 `command A | command B` means to pipe the output of A to B as input via a anonymous pipeline. 
@@ -139,8 +139,8 @@ Then, in exmample 2-2 and 2-3, we will talk about named pipe(FIFO) and show you 
 ```
 
 
->   In this example, we call `pipe()` to create a pipeline for communicating between two processes. 
-When `pipe()` is called,  it will give out two file descriptors which are not point to a file but a memory space.
+>   In this example, we call `pipe()` to create a pipeline for interprocess communication. 
+When `pipe()` is called,  it will give out two file descriptors which are not point to a file but a kernal buffer.
 The first descriptor fd[0] is for popping things from memory, the second descriptor fd[1] is for pushing.
 
 ```C 
@@ -159,9 +159,9 @@ The first descriptor fd[0] is for popping things from memory, the second descrip
 ```
 
 >   **Please note that** `pipe()` should be called before `fork()`. 
-That is because two processes should know the file descriptor of pipeline.
-If `pipe()` is put after `fork()`, only the process calling `pipe()` changes the file descriptors.
-In contrast, if putting `pipe()` before `fork()`, the value of file descriptors is copied to child process and child process can use the descriptors. 
+That is because all processes should know the file descriptors of pipeline.
+If `pipe()` is put after `fork()`, only the process calling `pipe()` has correct value of the descriptors.
+In contrast, if putting `pipe()` before `fork()`, value of the file descriptors is copied to child process and child process can also use the descriptors. 
 
 >   If you want to know more details of `pipe()`, type `man pipe` in terminal.
 
@@ -175,8 +175,8 @@ In contrast, if putting `pipe()` before `fork()`, the value of file descriptors 
 ```
 
 >   Named pipeline (a.k.a. FIFO) is same as anonymous pipeline, but creating a special file. 
-This file let communication between two unrelated processes,  which have no parent-child relation, becomes possible. 
-But in this example, we show the basic use first.
+This file let communication between two unrelated processes, which have no parent-child relation, becomes possible. 
+But in this example, we show the basic use at first.
 
 >  To use named pipeline, `mkfifo()` is called to create a named pipeline file. 
 And then you need open the file to use the pipeline **(use `open()`, not `fopen()`)**. 
@@ -204,15 +204,34 @@ Type `mkfifo test` in terminal and you can see the file named "test".
     prw-rw-r--  1 root root 0M 10月  3 00:35 test
     
 >  As above, the first flag of the file is 'p', which means pipeline file. 
-A pipeline file accesses to a memory space, instead of disk. 
-You can use it to create a communication between two running process. 
+A pipeline file links to a kernal buffer, instead of disk. 
+You can use it to do interprocess communication. 
 
 >  Open a new terminal and type `ls > test` in it. you can see nothing printed. Don't worry, things are quite normal.  
 >  Open another terminal and type `cat < test`. Surprisingly, what should be printed on first terminal appear on the second terminal.  
->  That is because the output of `ls` is buffered in memory which "test" accesses, and then `cat` take them from "test" as input to display. 
+>  That is because the output of `ls` is buffered, and then `cat` take them from "test" as input to display. 
 
->  The code "2-3" does similar things as above.
-
+>  The code "2-3" does similar things as above.  
 >  If you want to know more details of mkfifo, type `man mkfifo` and `man 3 mkfifo` in terminal.
 
 ### Shared memory
+
+A shared memory let two or more processes share a chunk of memory. All of them can access to this memory directly. 
+You can image all these processes draw on the same paper, any of them can add and remove graphs anytime, anywhere. 
+Thus, there is a problem if two or more processes access to same location at the same time. 
+
+#### * Example 3-1 Shared memory
+
+>  This is a example of basic use of shared memory. There are three main function - `shmget()`, `shmat(), `shmdt()`.
+
+```C
+  #include <sys/ipc.h>
+  #include <sys/shm.h>
+  
+  int shmget(key_t key, size_t size, int shmflg);
+  
+  void *shmat(int shmid, const void *shmaddr, int shmflg);
+  int shmdt(const void *shmaddr);
+```
+
+>  `shmget()` creates a chunk of memory.
