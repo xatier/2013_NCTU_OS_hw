@@ -196,14 +196,14 @@ After those, you can use it just as a regular file.
   }
 ```
 
-#### * Example 2-3 link two unrelated processes by FIFO
+#### * Example 2-3 communication of two unrelated processes
 
 >  You can create a named pipeline file by your hand. 
 Type `mkfifo test` in terminal and you can see the file named "test". 
 
     prw-rw-r--  1 root root 0M 10月  3 00:35 test
     
->  As above, the first flag of the file is 'p', which means pipeline file. 
+>  As above, the first flag of the file is 'p', which means a pipeline file. 
 A pipeline file links to a kernal buffer, instead of disk. 
 You can use it to do interprocess communication. 
 
@@ -212,7 +212,7 @@ You can use it to do interprocess communication.
 >  That is because the output of `ls` is buffered, and then `cat` take them from "test" as input to display. 
 
 >  The code "2-3" does similar things as above.  
->  If you want to know more details of mkfifo, type `man mkfifo` and `man 3 mkfifo` in terminal.
+>  If you want to know more details of `mkfifo()`, type `man mkfifo` and `man 3 mkfifo` in terminal.
 
 ### Shared memory
 
@@ -234,4 +234,36 @@ Thus, there is a problem if two or more processes access to same location at the
   int shmdt(const void *shmaddr);
 ```
 
->  `shmget()` creates a chunk of memory.
+>  `shmget()` creates a chunk of memory. `shmat()` and `shadt()` do attaching and detaching to the memory. 
+
+```C
+    int shmid = shmget(IPC_PRIVATE, 1024, 0666);
+    char* buf = shmat(shmid, 0, 0);
+    shmdt(buf);
+```
+
+>   After calling `shmat()`, you can use the memory what you want. In the example, we just use it as a string buffer. 
+
+#### * Example 3-2 Shared memory with key
+
+>  This example show how to use a shared memory with a key. In example 3-2, we create a shared memory with the key "IPC_PRIVATE". 
+In fact, IPC_PRIVATE is equal to "0", it means to create a shared memory with any key. 
+If creating it with a given key, any processes can use the same key to access the memory. 
+
+#### * Example 3-3 Remove the shared memory
+
+```C
+  #include <sys/ipc.h>
+  #include <sys/shm.h>
+  
+  int shmctl(int shmid, int cmd, struct shmid_ds *buf);
+```
+
+>  shmctl is a control function of the shared memory. 
+
+    shmctl(id, IPC_RMID, 0);
+    
+>  We just use it to remove a shared memory. There is a user commond with a same function.  
+>  Type `ipcs -m` in terminal to show all shared memory in and type `ipcrm [shmid]` to remove the shared memory with "shmid".
+
+### Some tips
