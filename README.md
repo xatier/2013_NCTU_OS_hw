@@ -346,4 +346,4 @@ In a report, You should show me how you do and how you solve the synchronization
 
 
 If you have any question, e-mail me or knock the door of EC618  
-[lukewu.cs02g@nctu.edu.tw](lukewu.cs02g@nctu.edu.tw)
+[lukewu.cs02g@nctu.edu.tw](mailto:lukewu.cs02g@nctu.edu.tw)
