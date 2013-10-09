@@ -6,13 +6,13 @@ You can clone the example code from github
 
     git clone https://github.com/RuKuWu/2013_NCTU_OS_hw.git
 
-Or you can just download the zip file from github and unzip it
+Or you can just download the zip file from github/e3 and unzip it
 
-P.S. - if you use the workstations of nctu-cs, git is already installed.
+P.S. - if you use the workstations of nctu-cs, git is pre-installed.
 ### Step 2. Build the code
 Go to the dir which example code located in
 
-    cd 2013_NCTU_OS_hw1-master
+    cd 2013_NCTU_OS_hw-master
 
 Then build all src code by
 
@@ -22,6 +22,8 @@ Or you can build each part by
 
     make [ fork | fifo | shm ]
 
+**If you are sure that you know every things about multi-process programming**  
+**You can skip to the part of [Assignment]().**
 ---
 Instruction
 ---
@@ -122,10 +124,10 @@ In the program, parent calls the `waitpid()` to wait for child to end.
 ### Named pipe (a.k.a. FIFO)
 
 Pipeline is a useful mechanism in Unix/Linux based system. 
-It creates a buffer in kernal to let a program push messages to this buffer and any program knowing the pipe descriptor can pop out messages from it.
+It creates a buffer in kernal to let a program push some messages and any program knowing the pipe descriptor can pop out the messages.
 
 In [Part A - Step 2](https://github.com/RuKuWu/2013_NCTU_OS_hw#step-2), we use a command `ps aux | grep firefox`. It's a use of pipeline. 
-`command A | command B` means to pipe the output of A to B as input via a anonymous pipeline. 
+`command A | command B` means to pipe the standard output of A to B as input via a anonymous pipeline. 
 Thus, in command `ps aux | grep firefox`, the output of `ps aux` is redirected to `grep firefox` as input.
 
 First, we will introducte the anonymous pipeline in example 2-1 to let you know how pipeline works.  
@@ -218,7 +220,7 @@ You can use it to do interprocess communication.
 
 A shared memory let two or more processes share a chunk of memory. All of them can access to this memory directly. 
 You can image all these processes draw on the same paper, any of them can add and remove graphs anytime, anywhere. 
-Thus, there is a problem if two or more processes access to same location at the same time. 
+Thus, there is a problem if two or more processes access to same location at the same time. (multi-process sync problem)
 
 #### * Example 3-1 Shared memory
 
@@ -266,4 +268,81 @@ If creating it with a given key, any processes can use the same key to access th
 >  We just use it to remove a shared memory. There is a user commond with a same function.  
 >  Type `ipcs -m` in terminal to show all shared memory in and type `ipcrm [shmid]` to remove the shared memory with "shmid".
 
-### Some tips
+
+### Comparison
+Pipe:  
+    1. unidirectional communication channel, there is no multi-process synchronization problem.  
+    2. message passing through the kernal, lower speed.  
+    
+Shared memory:  
+    1. processes can use the memory arbitrarily, synchronization problem may occur.  
+    2. directly accessing memory, higher speed.  
+
+---
+Assignment
+---
+In this homework, you are required to implement a simple game in two different way (FIFO and Shared memory). 
+
+### Introduction
+>   This game is played by two players on a 50x50 board. Players do a movement **in turn**. 
+First, choose a start point randomly. 
+A player with first moving set its mark on the start point. 
+Then, each player set a mark closing to the previous mark setted by its opponent.
+
+>   Example:  
++++++++++#++++++++++  
++++++++++$++++++++++  
++++++++++#++++++++++  
+++++++++\_$\_+++++++++  
++++++++++\_++++++++++  
+$,# are the movements done by two players. Now, it's #'s turn. 
+\_ shows the possible movement of #.  
+
+>   When there is a player cannot do a movement, the game ends and the player doing the last movement is the winner.  
+
+### Requirement
+>   You should implement this game with multi-process programming. 
+Each player is a process and they do communications with IPC. 
+Every movements done by one process should be recored in [PID]_[FIFO | SHM].txt.  
+
+>   The first line contains a interger F. If the process(player) move first, F=1; Otherwise, F=0.
+
+>   Next following lines describe movements of this process(player).  
+Each line contains a pair of interger i, j seperated by one space, which shows the location this movement marked. 
+We define the most top-left point on board is (0, 0).  
+
+>   The file ends with the line containing a interger W. If the player win, W=1; Otherwise W=0.
+
+>   Example:  
+----2131_FIFO.txt----  
+1  
+5 6  
+6 7  
+.  
+.  
+.  
+.  
+.  
+0  
+
+>   ----2132_FIFO.txt----  
+0  
+5 7  
+6 8  
+.  
+.  
+.  
+.  
+.  
+1  
+
+### Submission
+>   Please submit your homework in zip or rar named [Student ID].zip/rar. Including  
+1.  FIFO version code  
+2.  Shared memory version code  
+3.  Report (100~300 words) in word, pdf or markdown format.  
+In a report, You should show me how you do and how you solve the synchronization problem in shared memory version code.  
+
+
+If you have any question, e-mail me or knock the door of EC618  
+[lukewu.cs02g@nctu.edu.tw](lukewu.cs02g@nctu.edu.tw)
