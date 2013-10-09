@@ -340,7 +340,7 @@ The location of the upper-left cell is (0, 0).
 1  
 
 ### Submission
->   Please submit your homework in a zip or rar file named [Student ID].zip/rar. Including
+>   Please submit your homework in a zip or rar file named [Student ID].zip/rar. Including  
 1.  FIFO version code  
 2.  Shared memory version code  
 3.  Report (100~300 words) in word, pdf or markdown format.  
