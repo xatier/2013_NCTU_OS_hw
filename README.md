@@ -23,7 +23,8 @@ Or you can build each part by
     make [ fork | fifo | shm ]
 
 **If you are sure that you know every things about multi-process programming**  
-**You can skip to the part of [Assignment]().**
+**You can skip to the part of [Assignment](https://github.com/RuKuWu/2013_NCTU_OS_hw#assignment).**
+
 ---
 Instruction
 ---
