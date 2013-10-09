@@ -1,29 +1,29 @@
 A Quick Start Guide
 ====
 
-### Step 1. Get example code
-You can clone the example code from github
+### Step 1. Get the example code
+You can clone the example code tree from github
 
     git clone https://github.com/RuKuWu/2013_NCTU_OS_hw.git
 
-Or you can just download the zip file from github/e3 and unzip it
+Or, you can download the zip file from github/e3 and unzip it
 
-P.S. - if you use the workstations of nctu-cs, git is pre-installed.
-### Step 2. Build the code
-Go to the dir which example code located in
+P.S. - Git is pre-installed on CS workstations.
+### Step 2. Build the example code
+Go to the directory of the example code
 
     cd 2013_NCTU_OS_hw-master
 
-Then build all src code by
+Initiate the build process by
 
     make
 
-Or you can build each part by
+Or, you can build each individual example by
 
     make [ fork | fifo | shm ]
 
-**If you are sure that you know everything about multi-process programming**  
-**You can skip to the part of [Assignment](https://github.com/RuKuWu/2013_NCTU_OS_hw#assignment).**
+**If you are familiar with multi-process programming, 
+you can fast-forward to the [Assignment](https://github.com/RuKuWu/2013_NCTU_OS_hw#assignment) section.**
 
 ---
 Instruction
@@ -285,10 +285,10 @@ Assignment
 In this homework, you are required to implement a simple game in two different way (FIFO and Shared memory). 
 
 ### Introduction
->   This game is played by two players on a 50x50 board. Players do a movement **in turn**. 
-First, choose a start point randomly. 
-A player with first moving set its mark on the start point. 
-Then, each player set a mark closing to the previous mark setted by its opponent.
+>   This game is played by two players on a 50x50 board. 
+Each player has a unique ID. During the game, the players fill their IDs into the cells on the board in turn. 
+Each cell can only be filled with at most one ID. A filled cell cannot be overwritten. 
+When choosing a cell for filling, a player is restricted to those cells next to the cell filled most recently by its opponent.
 
 >   Example:  
 +++++++++#++++++++++  
@@ -296,23 +296,25 @@ Then, each player set a mark closing to the previous mark setted by its opponent
 +++++++++#++++++++++  
 ++++++++\_$\_+++++++++  
 +++++++++\_++++++++++  
-$,# are the movements done by two players. Now, it's #'s turn. 
-\_ shows the possible movement of #.  
+$,# are the cells filled by two players. Now, it's #'s turn. 
+\_ shows the possible cells for # to fill. 
 
->   When there is a player cannot do a movement, the game ends and the player doing the last movement is the winner.  
+>   When no player can fill any cell in the board, the game ends and the player who did the last filling is the winner.   
 
 ### Requirement
 >   You should implement this game with multi-process programming. 
 Each player is a process and they do communications with IPC. 
-Every movements done by one process should be recored in [PID]_[FIFO | SHM].txt.  
+Every movements done by one process should be recorded in [PID]_[FIFO | SHM].txt.  
 
->   The first line contains a interger F. If the process(player) move first, F=1; Otherwise, F=0.
+>   The first line contains an integer F. 
+If the process(player) moves first, you should set F=1; Otherwise, you should set F=0. 
 
->   Next following lines describe movements of this process(player).  
-Each line contains a pair of interger i, j seperated by one space, which shows the location this movement marked. 
-We define the most top-left point on board is (0, 0).  
+>   The following lines describe the locations of the cells filled by this process(player). 
+Each line corresponds to one location represented by a pair of integer i, j separated by single space. 
+The location of the upper-left cell is (0, 0). 
 
->   The file ends with the line containing a interger W. If the player win, W=1; Otherwise W=0.
+
+>   The file ends with the line containing an integer W. If the player wins, W=1; Otherwise W=0.
 
 >   Example:  
 ----2131_FIFO.txt----  
@@ -338,11 +340,12 @@ We define the most top-left point on board is (0, 0).
 1  
 
 ### Submission
->   Please submit your homework in zip or rar named [Student ID].zip/rar. Including  
+>   Please submit your homework in a zip or rar file named [Student ID].zip/rar. Including
 1.  FIFO version code  
 2.  Shared memory version code  
 3.  Report (100~300 words) in word, pdf or markdown format.  
-In a report, You should show me how you do and how you solve the synchronization problem in shared memory version code.  
+In your report, you should explain your design 
+and how you solve the synchronization problem in the shared memory version.   
 
 
 If you have any question, e-mail me or knock the door of EC618  
