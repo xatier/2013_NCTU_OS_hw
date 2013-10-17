@@ -1,4 +1,4 @@
-A Quick Start Guide
+HW #2. Process Concept 
 ====
 
 ### Step 1. Get the example code
@@ -269,26 +269,23 @@ If creating it with a given key, any processes can use the same key to access th
 >  We just use it to remove a shared memory. There is a user commond with a same function.  
 >  Type `ipcs -m` in terminal to show all shared memory in and type `ipcrm [shmid]` to remove the shared memory with "shmid".
 
-
-### Comparison
-Pipe:  
-    1. unidirectional communication channel, there is no multi-process synchronization problem.  
-    2. message passing through the kernal, lower speed.  
-    
-Shared memory:  
-    1. processes can use the memory arbitrarily, synchronization problem may occur.  
-    2. directly accessing memory, higher speed.  
-
 ---
 Assignment
 ---
-In this homework, you are required to implement a simple game in two different way (FIFO and Shared memory). 
 
-### Introduction
->   This game is played by two players on a 50x50 board. 
-Each player has a unique ID. During the game, the players fill their IDs into the cells on the board in turn. 
-Each cell can only be filled with at most one ID. A filled cell cannot be overwritten. 
-When choosing a cell for filling, a player is restricted to those cells next to the cell filled most recently by its opponent.
+### Part A
+
+In this part, you are required to implement a simple game in two different way (FIFO and Shared memory). 
+
+#### Introduction
+This game is played by two players on a 50x50 board. 
+Each player has a unique ID. 
+During the game, the players move by filling their IDs into the cells on the board in turn. 
+Each cell can only be filled with at most one ID. 
+A filled cell cannot be overwritten. 
+The player who makes the first move can choose any cell in the board to fill his/her ID. 
+For the follow-up moves, a player can only choose an empty cell adjacent to the cell where the last move was made. 
+If the last move was made at coordinate (x,y), the adjacent cells are (x-1,y), (x,y-1), (x+1,y), and (x,y+1).
 
 >   Example:  
 +++++++++#++++++++++  
@@ -299,22 +296,21 @@ When choosing a cell for filling, a player is restricted to those cells next to 
 $,# are the cells filled by two players. Now, it's #'s turn. 
 \_ shows the possible cells for # to fill. 
 
->   When no player can fill any cell in the board, the game ends and the player who did the last filling is the winner.   
+When no player can fill any cell in the board, the game ends and the player who did the last filling is the winner.   
 
-### Requirement
->   You should implement this game with multi-process programming. 
-Each player is a process and they do communications with IPC. 
-Every movements done by one process should be recorded in [PID]_[FIFO | SHM].txt.  
+#### Requirement
+You should implement this game with multi-process programming. 
+Each player is modeled by a process, and the two players (processes) will communicate via IPC. 
+All the movements done by each process should be recorded in a respective file named [PID]_[FIFO | SHM].txt. 
 
->   The first line contains an integer F. 
-If the process(player) moves first, you should set F=1; Otherwise, you should set F=0. 
+In each file, the first line contains an integer F. 
+If the corresponding process(player) moves first, you should set F=1; Otherwise, you should set F=0. 
 
->   The following lines describe the locations of the cells filled by this process(player). 
+The following lines describe the locations of the cells filled by this process(player). 
 Each line corresponds to one location represented by a pair of integer i, j separated by single space. 
 The location of the upper-left cell is (0, 0). 
 
-
->   The file ends with the line containing an integer W. If the player wins, W=1; Otherwise W=0.
+The file ends with the line containing an integer W. If the player wins, W=1; Otherwise W=0.
 
 >   Example:  
 ----2131_FIFO.txt----  
@@ -339,13 +335,58 @@ The location of the upper-left cell is (0, 0).
 .  
 1  
 
+In your report, you should explain your design and how you solve the synchronization problem in the shared memory version. 
+
+-  (**10pts**) A.1: FIFO version Code
+
+-  (**10pts**) A.2: SHM version Code
+
+-  (**20pts**) A.3: Report
+
+## Part B
+Take a look at shared_mem.cpp  and try to compile it on a multi-core Linux machine (e.g. linux1.cs.nctu.edu.tw) with
+
+    g++ -O3 -DSINGLE ./shared_mem.cpp –lrt
+
+And, run it on the machine.
+
+Now, try to compile it with
+
+    g++ -O3 -DCOPY ./shared_mem.cpp –lrt
+
+And, run it.
+
+
+Now, try to compile it with
+
+    g++ -O3 -DSHM ./shared_mem.cpp –lrt
+
+And, run it.
+
+Now, try to compile it again with
+
+    g++ -O3 -DMMAP ./shared_mem.cpp –lrt
+
+And, run it.
+
+Based on the experiment results and your study of the code, please answer the following questions
+
+-   (**10pts**) B.1:  What is the purpose of the program? What are the meanings of the output messages?
+
+-   (**20pts**) B.2:  Tweak BUF\_SIZE (in shared_mem.cpp) to 1024\*1024\*60 and redo the experiments. Describe your findings and explain the cause. 
+
+-   (**10pts**) B.3:  What are the technical differences between using  -DSINGLE and -DCOPY? 
+
+-   (**10pts**) B.4:  What are the technical differences between using  -DSINGLE and -DSHM? 
+
+-   (**10pts**) B.5:  What are the technical differences between using  -DSHM and -DMMAP? 
+
+
 ### Submission
->   Please submit your homework in a zip or rar file named [Student ID].zip/rar. Including  
+Please submit your homework in a zip or rar file named [Student ID].zip/rar. Including  
 1.  FIFO version code  
 2.  Shared memory version code  
-3.  Report (100~300 words) in word, pdf or markdown format.  
-In your report, you should explain your design 
-and how you solve the synchronization problem in the shared memory version.   
+3.  Report (100~300 words in part A, 200~500 words in part B) in word, pdf or markdown format.  
 
 
 If you have any question, e-mail me or knock the door of EC618  
