@@ -39,26 +39,26 @@ Now, we will show how to get the information from `/proc`.
 ### Step 1.
 
 >   Open any application you want to observe. 
-We use Firefox as example, which is a default browser in most of linux-based operating systems.
+We use Firefox as example, which is a default browser in most of Linux-based operating systems.
 
 ### Step 2.
 
 >   Type `ps aux` (it is distinct of `ps -aux`) or `ps fax` in terminal to list all running processes.  
-Then, type `ps aux | grep firefox` to show process information of firefox.(Remember the pid of firefox)
+Then, type `ps aux | grep firefox` to show process information of Firefox.(Remember the pid of Firefox)
 
->   `ps` and `grep` are build-in program in linux. First of one can list all processes in operating system,
+>   `ps` and `grep` are build-in program in Linux. First of one can list all processes in operating system,
 the other one can filter the input and just print out what you want.  
 
 >   If you want to know more details of these two program, type `man ps` and `man grep` in terminal.
 
 ### Step 3.
 
->   Type `pstree [PID]` and you can see the processes tree of firefox.  
-Type `cd /proc/[PID]; ls` and you can see all things about the process of firefox.
+>   Type `pstree [PID]` and you can see the processes tree of Firefox.  
+Type `cd /proc/[PID]; ls` and you can see all things about the process of Firefox.
 
 ## B. Linux Multi-Process Programming
 
-In this part, we will tall you how to write a multi-process program in linux environment.
+In this part, we will tall you how to write a multi-process program in Linux environment.
 If you are already familiar with this, you can skip this part.
 
 ### Before coding: some of our suggestion
@@ -66,7 +66,7 @@ If you are already familiar with this, you can skip this part.
 >   Basic C/C++ knowledge is required.
 
 2.  Editor  
->   Vim is recommonded. However, you can use any editor you like.  
+>   Vim is recommended. However, you can use any editor you like.  
 >   If you are finding a suitable editor, you can try 
 [gedit](https://projects.gnome.org/gedit/), [bluefish](http://bluefish.openoffice.nl/index.html), [code::blocks](http://www.codeblocks.org/) and [sublime](http://www.sublimetext.com/).
 
@@ -125,14 +125,14 @@ In the program, parent calls the `waitpid()` to wait for child to end.
 ### Named pipe (a.k.a. FIFO)
 
 Pipeline is a useful mechanism in Unix/Linux based system. 
-It creates a buffer in kernal to let a program push some messages and any program knowing the pipe descriptor can pop out the messages.
+It creates a buffer in kernel to let a program push some messages and any program knowing the pipe descriptor can pop out the messages.
 
 In [Part A - Step 2](https://github.com/RuKuWu/2013_NCTU_OS_hw#step-2), we use a command `ps aux | grep firefox`. It's a use of pipeline. 
 `command A | command B` means to pipe the standard output of A to B as input via a anonymous pipeline. 
 Thus, in command `ps aux | grep firefox`, the output of `ps aux` is redirected to `grep firefox` as input.
 
-First, we will introducte the anonymous pipeline in example 2-1 to let you know how pipeline works.  
-Then, in exmample 2-2 and 2-3, we will talk about named pipe(FIFO) and show you what's a difference between anonymous and named pipe.
+First, we will introduce the anonymous pipeline in example 2-1 to let you know how pipeline works.  
+Then, in example 2-2 and 2-3, we will talk about named pipe(FIFO) and show you what's a difference between anonymous and named pipe.
 
 #### * Example 2-1 pipe
 ```C
@@ -143,7 +143,7 @@ Then, in exmample 2-2 and 2-3, we will talk about named pipe(FIFO) and show you 
 
 
 >   In this example, we call `pipe()` to create a pipeline for interprocess communication. 
-When `pipe()` is called,  it will give out two file descriptors which are not point to a file but a kernal buffer.
+When `pipe()` is called,  it will give out two file descriptors which are not point to a file but a kernel buffer.
 The first descriptor fd[0] is for popping things from memory, the second descriptor fd[1] is for pushing.
 
 ```C 
@@ -207,10 +207,10 @@ Type `mkfifo test` in terminal and you can see the file named "test".
     prw-rw-r--  1 root root 0M 10月  3 00:35 test
     
 >  As above, the first flag of the file is 'p', which means a pipeline file. 
-A pipeline file links to a kernal buffer, instead of disk. 
+A pipeline file links to a kernel buffer, instead of disk. 
 You can use it to do interprocess communication. 
 
->  Open a new terminal and type `ls > test` in it. you can see nothing printed. Don't worry, things are quite normal.  
+>  Open a new terminal and type `ls > test` in it. You can see nothing printed. Don't worry, things are quite normal.  
 >  Open another terminal and type `cat < test`. Surprisingly, what should be printed on first terminal appear on the second terminal.  
 >  That is because the output of `ls` is buffered, and then `cat` take them from "test" as input to display. 
 
