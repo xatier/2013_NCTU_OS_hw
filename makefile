@@ -4,7 +4,7 @@ fifo_src = 2-1_pipe.c 2-2_fifo.c 2-3_fifo_nonrelated_process.c
 shm_src = 3-1_shared_memory.c 3-2_shared_memory_with_key.c 3-3_shared_memory_del.c
 
 .PHONY: all
-all: fork fifo shm pa1
+all: fork fifo shm pa1 pa2
 
 fork: $(fork_src:.c=)
 	$(foreach fork_src, $(src), $(CC) $(src) -o $(src:.c=);)	
@@ -15,6 +15,8 @@ shm: $(shm_src:.c=)
 
 pa1:
 	$(CC) -std=c11 pa1.c -o pa1
+pa2:
+	$(CC) -std=c11 pa2.c -o pa2
 
 .PHONY: clean cleanfork cleanfifo cleanshm
 clean: cleanfork cleanfifo cleanshm
