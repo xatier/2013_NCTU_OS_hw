@@ -45,9 +45,9 @@ int run (int *turn, int lx, int ly, int *x, int *y) {
 
 
 int main (int argc, char* argv[]) {
-	const char path[20] = "named_pipe";
-	char str[BUFFER_SIZE] = "";
-	int fd;
+    const char path[20] = "named_pipe";
+    char str[BUFFER_SIZE] = "";
+    int fd;
     int game_over = 0;
     int turn = 0;
     char output[20];
@@ -61,27 +61,27 @@ int main (int argc, char* argv[]) {
     y = rand() % 10;
     map[x][y] = 2;
 
-	pid_t cpid;
+    pid_t cpid;
 
-	if ( mkfifo(path, 0666) < 0 ) {
-		perror("mkfifo failed.");
-		return -1;
-	}
+    if ( mkfifo(path, 0666) < 0 ) {
+        perror("mkfifo failed.");
+        return -1;
+    }
 
 
-	cpid = fork();
-	if ( cpid < 0 ) {
-		perror("Fork failed.");
-		return -1;
-	} else if ( cpid == 0 ) {          // child first
+    cpid = fork();
+    if ( cpid < 0 ) {
+        perror("Fork failed.");
+        return -1;
+    } else if ( cpid == 0 ) {          // child first
         sprintf(output, "%d_FIFO.txt", getpid());
         freopen(output, "w", stdout);
         puts("1");
-	}
+    }
     else {
-		fd = open(path, O_WRONLY);
+        fd = open(path, O_WRONLY);
         sprintf(str, "%d %d %d", turn, x, y);
-		write(fd, str, sizeof(char)*(strlen(str)+1));
+        write(fd, str, sizeof(char)*(strlen(str)+1));
         close(fd);
 
         sprintf(output, "%d_FIFO.txt", getpid());
@@ -93,7 +93,7 @@ int main (int argc, char* argv[]) {
     while (turn < 2) {
 
         fd = open(path, O_RDONLY);
-		read(fd, str, sizeof(char)*BUFFER_SIZE);
+        read(fd, str, sizeof(char)*BUFFER_SIZE);
         sscanf(str, "%d%d%d", &turn, &lx, &ly);
         close(fd);
 
@@ -121,9 +121,9 @@ int main (int argc, char* argv[]) {
                 map[lx][ly] = 1;
                 run(&turn, lx, ly, &x, &y);
 
-		        fd = open(path, O_WRONLY);
+                fd = open(path, O_WRONLY);
                 sprintf(str, "%d %d %d", turn, x, y);
-		        write(fd, str, sizeof(char)*(strlen(str)+1));
+                write(fd, str, sizeof(char)*(strlen(str)+1));
                 close(fd);
 
                 if (turn >= 2) {
@@ -141,8 +141,8 @@ int main (int argc, char* argv[]) {
     }
 
     if (turn >= 2 && cpid != 0) {
-	    remove(path);
+        remove(path);
     }
 
-	return 0;
+    return 0;
 }
