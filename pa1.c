@@ -9,7 +9,7 @@
 
 #define BUFFER_SIZE 40
 
-int map[10][10] = {0};
+int map[50][50] = {0};
 
 void valid (int turn, int cx, int cy, int *nx, int *ny) {
     int dir[4][2] = {{1, 0}, {-1, 0}, {0, -1}, {0, 1}};
@@ -20,8 +20,8 @@ void valid (int turn, int cx, int cy, int *nx, int *ny) {
     for (int d = 0; d < 4; d++) {
         x = cx + dir[d][0];
         y = cy + dir[d][1];
-        if (0 <= x && x < 10 &&
-            0 <= y && y < 10 &&
+        if (0 <= x && x < 50 &&
+            0 <= y && y < 50 &&
             map[x][y] == 0) {
             *nx = x;
             *ny = y;
@@ -57,8 +57,8 @@ int main (int argc, char* argv[]) {
     int lx, ly;
 
     srand(time(NULL));
-    x = rand() % 10;
-    y = rand() % 10;
+    x = rand() % 50;
+    y = rand() % 50;
     map[x][y] = 2;
 
     pid_t cpid;
