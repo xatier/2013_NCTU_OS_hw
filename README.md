@@ -11,6 +11,17 @@ Please go to `pa1.c/pa2.c` and `report.md`. : )
 
 ## Run
 
+    - for pa1 and pa2
+    
+    make pa1
+    ./pa1
+
+    make pa2
+    ./pa2
+
+
+    - for run TA's code
+
     ./run.sh
 
 ----
