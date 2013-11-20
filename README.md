@@ -1,3 +1,13 @@
+To avoid TA's stupid stuff, you can skip the instructions
+=========================================================
+
+Please go to `pa1.c/pa2.c` and `report.md`. : )
+-----------------------------------------------
+
+### I don't have any responsibility for other codes (from TA).
+
+----
+
 HW #2. Process Concept 
 ====
 
