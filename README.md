@@ -1,3 +1,31 @@
+To avoid TA's stupid stuff, you can skip the instructions
+=========================================================
+
+Please go to `pa1.c/pa2.c` and `report.md`. : )
+-----------------------------------------------
+
+### I don't have any responsibility for other codes (from TA).
+
+
+----
+
+## Run
+
+    - for pa1 and pa2
+    
+    make pa1
+    ./pa1
+
+    make pa2
+    ./pa2
+
+
+    - for run TA's code
+
+    ./run.sh
+
+----
+
 HW #2. Process Concept 
 ====
 
