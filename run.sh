@@ -9,7 +9,7 @@ g++ -O3 -DCOPY ./shared_mem.cpp -lrt
 ./a.out
 
 echo "shm"
-g++ -O3 -DSHM ./shared_mem.cpp -rt
+g++ -O3 -DSHM ./shared_mem.cpp -rlt
 ./a.out
 
 echo "mmap"
